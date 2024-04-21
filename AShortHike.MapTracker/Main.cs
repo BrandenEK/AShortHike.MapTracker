@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using UnityEngine;
 
 namespace AShortHike.MapTracker;
 
@@ -7,9 +8,11 @@ namespace AShortHike.MapTracker;
 public class Main : BaseUnityPlugin
 {
     public static MapTracker MapTracker { get; private set; }
+    public static Transform TransformHolder { get; private set; }
 
     private void Awake()
     {
+        TransformHolder = transform;
         MapTracker = new MapTracker();
     }
 }
