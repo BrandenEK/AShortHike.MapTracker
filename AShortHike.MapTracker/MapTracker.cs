@@ -1,4 +1,5 @@
 ﻿using AShortHike.ModdingAPI;
+using AShortHike.ModdingAPI.Files;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,9 +9,12 @@ public class MapTracker : ShortHikeMod
 {
     public MapTracker() : base(ModInfo.MOD_ID, ModInfo.MOD_NAME, ModInfo.MOD_AUTHOR, ModInfo.MOD_VERSION) { }
 
+    private Sprite _mapImage, _characterImage;
+
     protected override void OnInitialize()
     {
-        LogHandler.Error($"{ModInfo.MOD_NAME} has been initialized");
+        FileHandler.LoadDataAsSprite("map.png", out _mapImage);
+        FileHandler.LoadDataAsSprite("character.png", out _characterImage);
     }
 
     protected override void OnUpdate()
@@ -54,9 +58,12 @@ public class MapTracker : ShortHikeMod
             if (x_map != null)
                 return x_map;
 
-            RectTransform borderImage = CreateImage("Border", Canvas, new Vector2(910, 910), null, new Color(242 / (float)255, 238 / (float)255, 203 / (float)255));
-            RectTransform mapImage = CreateImage("Map", borderImage, new Vector2(900, 900), null, Color.red);
-            RectTransform character = CreateImage("Character", mapImage, new Vector2(50, 50), null, Color.yellow);
+            float height = Screen.height * 0.9f;
+            float width = (_mapImage?.rect.width ?? 100) * height / (_mapImage?.rect.height ?? 100);
+
+            RectTransform borderImage = CreateImage("Border", Canvas, new Vector2(width + 10, height + 10), null, new Color(242 / (float)255, 238 / (float)255, 203 / (float)255));
+            RectTransform mapImage = CreateImage("Map", borderImage, new Vector2(width, height), _mapImage, Color.white);
+            RectTransform character = CreateImage("Character", mapImage, new Vector2(50, 50), _characterImage, Color.white);
             borderImage.gameObject.SetActive(false);
 
             LogHandler.Warning("Created new map object");
