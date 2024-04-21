@@ -23,6 +23,11 @@ public class MapTracker : ShortHikeMod
         {
             ToggleMap();
         }
+
+        if (Map.gameObject.activeSelf)
+        {
+            UpdatePlayerPosition();
+        }
     }
 
     private void ToggleMap()
@@ -34,7 +39,19 @@ public class MapTracker : ShortHikeMod
 
     private void UpdatePlayerPosition()
     {
+        RectTransform parent = Character.parent as RectTransform;
 
+        Vector3 playerPosition = PlayerPosition;
+        Vector2 normalizedPosition = new Vector2(NormalizePoint(playerPosition.x, MAP_XBOUNDS), NormalizePoint(playerPosition.z, MAP_YBOUNDS));
+        Vector2 scaledPosition = new Vector2(normalizedPosition.x * parent.sizeDelta.x, normalizedPosition.y * parent.sizeDelta.y);
+        Vector2 offsetPosition = new Vector2(scaledPosition.x - parent.sizeDelta.x / 2, scaledPosition.y - parent.sizeDelta.y / 2);
+
+        Character.anchoredPosition = offsetPosition;
+    }
+
+    private float NormalizePoint(float position, Vector2 bounds)
+    {
+        return Mathf.Clamp01((position - bounds.x) / (bounds.y - bounds.x));
     }
 
     private RectTransform CreateImage(string name, Transform parent, Vector2 size, Sprite sprite, Color color)
@@ -50,8 +67,23 @@ public class MapTracker : ShortHikeMod
         return rect;
     }
 
-    private Transform x_map;
-    private Transform Map
+    private RectTransform x_character;
+    private RectTransform Character
+    {
+        get
+        {
+            if (x_character != null)
+                return x_character;
+
+            RectTransform character = CreateImage("Character", Map.GetChild(0), new Vector2(50, 50), _characterImage, Color.white);
+
+            LogHandler.Warning("Created new character object");
+            return x_character = character;
+        }
+    }
+
+    private RectTransform x_map;
+    private RectTransform Map
     {
         get
         {
@@ -61,13 +93,12 @@ public class MapTracker : ShortHikeMod
             float height = Screen.height * 0.9f;
             float width = (_mapImage?.rect.width ?? 100) * height / (_mapImage?.rect.height ?? 100);
 
-            RectTransform borderImage = CreateImage("Border", Canvas, new Vector2(width + 10, height + 10), null, new Color(242 / (float)255, 238 / (float)255, 203 / (float)255));
-            RectTransform mapImage = CreateImage("Map", borderImage, new Vector2(width, height), _mapImage, Color.white);
-            RectTransform character = CreateImage("Character", mapImage, new Vector2(50, 50), _characterImage, Color.white);
-            borderImage.gameObject.SetActive(false);
+            RectTransform border = CreateImage("Border", Canvas, new Vector2(width + 10, height + 10), null, new Color(242 / (float)255, 238 / (float)255, 203 / (float)255));
+            CreateImage("Map", border, new Vector2(width, height), _mapImage, Color.white);
+            border.gameObject.SetActive(false);
 
             LogHandler.Warning("Created new map object");
-            return x_map = borderImage;
+            return x_map = border;
         }
     }
 
@@ -95,4 +126,9 @@ public class MapTracker : ShortHikeMod
             return x_canvas = canvas.transform;
         }
     }
+
+    private Vector3 PlayerPosition => Singleton<GameServiceLocator>.instance.levelController.player.gameObject.transform.position;
+
+    private static readonly Vector2 MAP_XBOUNDS = new(-150, 1100);
+    private static readonly Vector2 MAP_YBOUNDS = new(-100, 1500);
 }
