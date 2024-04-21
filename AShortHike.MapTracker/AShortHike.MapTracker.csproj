@@ -9,7 +9,7 @@
     <Authors>Damocles</Authors>
     <Company>Damocles</Company>
     <Description>Displays an in-game map with the player's position</Description>
-    <Version>0.1.0</Version>
+    <Version>1.0.0</Version>
 
     <TargetName>MapTracker</TargetName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
