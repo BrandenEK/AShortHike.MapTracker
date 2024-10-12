@@ -1,5 +1,6 @@
 ﻿using AShortHike.ModdingAPI;
 using AShortHike.ModdingAPI.Files;
+using QuickUnityTools.Input;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,13 +18,18 @@ public class MapTracker : ShortHikeMod
         FileHandler.LoadDataAsSprite("character.png", out _characterImage);
     }
 
-    protected override void OnUpdate()
+    public void OnEarlyUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        PlayerInput.obeysPriority = false;
+        if (Input.GetKeyDown(KeyCode.M) || PlayerInput.rightBumper.isPressed && PlayerInput.button1.ConsumePress())
         {
             ToggleMap();
         }
+        PlayerInput.obeysPriority = true;
+    }
 
+    protected override void OnUpdate()
+    {
         if (Map.gameObject.activeSelf)
         {
             UpdatePlayerPosition();
@@ -65,6 +71,17 @@ public class MapTracker : ShortHikeMod
         image.sprite = sprite;
 
         return rect;
+    }
+
+    private GameUserInput x_playerInput;
+    private GameUserInput PlayerInput
+    {
+        get
+        {
+            if (x_playerInput == null)
+                x_playerInput = GameObject.Find("PlayerInput")?.GetComponent<GameUserInput>();
+            return x_playerInput;
+        }
     }
 
     private RectTransform x_character;
