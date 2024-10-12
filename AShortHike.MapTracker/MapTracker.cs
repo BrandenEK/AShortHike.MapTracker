@@ -11,7 +11,6 @@ public class MapTracker : ShortHikeMod
     public MapTracker() : base(ModInfo.MOD_ID, ModInfo.MOD_NAME, ModInfo.MOD_AUTHOR, ModInfo.MOD_VERSION) { }
 
     private Sprite _mapImage, _characterImage;
-    private GameUserInput _input;
 
     protected override void OnInitialize()
     {
@@ -19,22 +18,18 @@ public class MapTracker : ShortHikeMod
         FileHandler.LoadDataAsSprite("character.png", out _characterImage);
     }
 
-    protected override void OnLoadGame()
+    public void OnEarlyUpdate()
     {
-        var input = new GameObject($"{ModInfo.MOD_NAME} Input");
-        _input = GameUserInput.CreateInput(input);
-        _input.obeysPriority = false;
+        PlayerInput.obeysPriority = false;
+        if (Input.GetKeyDown(KeyCode.M) || PlayerInput.rightBumper.isPressed && PlayerInput.button1.ConsumePress())
+        {
+            ToggleMap();
+        }
+        PlayerInput.obeysPriority = true;
     }
 
     protected override void OnUpdate()
     {
-        LogHandler.Info(_input.rightBumper.isPressed);
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            ToggleMap();
-        }
-
         if (Map.gameObject.activeSelf)
         {
             UpdatePlayerPosition();
@@ -78,16 +73,16 @@ public class MapTracker : ShortHikeMod
         return rect;
     }
 
-    //private GameUserInput x_playerInput;
-    //private GameUserInput PlayerInput
-    //{
-    //    get
-    //    {
-    //        if (x_playerInput == null)
-    //            x_playerInput = GameObject.Find("PlayerInput")?.GetComponent<GameUserInput>();
-    //        return x_playerInput;
-    //    }
-    //}
+    private GameUserInput x_playerInput;
+    private GameUserInput PlayerInput
+    {
+        get
+        {
+            if (x_playerInput == null)
+                x_playerInput = GameObject.Find("PlayerInput")?.GetComponent<GameUserInput>();
+            return x_playerInput;
+        }
+    }
 
     private RectTransform x_character;
     private RectTransform Character
