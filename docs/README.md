@@ -5,7 +5,7 @@
 ---
 
 ## Features
-- Press ```M``` or ```LB + A``` or ```RB + A``` to toggle the in-game map
+- Press ```keyboard: M``` or ```controller: LB/RB + A``` to toggle the in-game map
 - A character icon is displayed at the player's position
 
 ## Installation
