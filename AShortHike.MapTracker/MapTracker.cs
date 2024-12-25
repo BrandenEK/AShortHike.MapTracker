@@ -21,7 +21,7 @@ public class MapTracker : ShortHikeMod
     public void OnEarlyUpdate()
     {
         PlayerInput.obeysPriority = false;
-        if (Input.GetKeyDown(KeyCode.M) || PlayerInput.rightBumper.isPressed && PlayerInput.button1.ConsumePress())
+        if (PressedMapInput)
         {
             ToggleMap();
         }
@@ -72,6 +72,8 @@ public class MapTracker : ShortHikeMod
 
         return rect;
     }
+
+    private bool PressedMapInput => Input.GetKeyDown(KeyCode.M) || (PlayerInput.leftBumper.isPressed || PlayerInput.rightBumper.isPressed) && PlayerInput.button1.ConsumePress();
 
     private GameUserInput x_playerInput;
     private GameUserInput PlayerInput
