@@ -9,5 +9,6 @@
 - A character icon is displayed at the player's position
 
 ## Installation
-This mod is available for download through the [Short Hike Mod Installer](https://github.com/BrandenEK/AShortHike.Modding.Installer)
-- Required dependencies: [Modding API](https://github.com/BrandenEK/AShortHike.ModdingAPI)
+This mod is available for download through the [Short Hike Mod Installer](https://github.com/BrandenEK/AShortHike.Modding.Installer) <br>
+Required dependencies:
+- [Modding API](https://github.com/BrandenEK/AShortHike.ModdingAPI)
