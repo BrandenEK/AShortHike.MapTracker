@@ -138,7 +138,7 @@ public class MapTracker : ShortHikeMod
 
             CanvasScaler scaler = obj.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.referenceResolution = new Vector2(Screen.width, Screen.height);
             scaler.referencePixelsPerUnit = 100;
 
             LogHandler.Warning("Created new canvas object");
